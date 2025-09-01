@@ -31,8 +31,8 @@ This project is a front-end text search application built with HTML, CSS, and Ja
 
 
 text-search-app/
-├── index.html          # Main HTML file containing all code
-└── README.md          # Project documentation
+index.html          # Main HTML file containing all code
+README.md          # Project documentation
 
 
 # How It Works
