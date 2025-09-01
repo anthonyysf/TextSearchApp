@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Search Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+        }
+        .header {
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #444;
+        }
+        #searchBox {
+            width: 500px;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .result-info {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        .article-item {
+            background-color: white;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #a39c9c;
+        }
+        .article-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .article-date {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .article-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        .matched-text {
+            background-color: yellow;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Search</h1>
+    </div>
+    <input type="text" id="searchBox" placeholder="Type to search articles...">
+    <div id="resultCount" class="result-info"></div>
+    <div id="articlesList"></div>
+
+    <script>
+        var articlesData = [
+            {
+                title: "Random articles from the web",
+                date:"Nov 15, 2002",
+                content:"Coding articles are detailed resources that provide in-depth explanations of programming concepts, workflows, and tools. They are designed to help developers enhance their skills and understanding of various technologies. These articles often cover topics ranging from beginner-friendly tutorials to advanced techniques in software development, data science, and AI."
+            },
+            {
+                title:"Popular Topics in Coding Articles",
+                date: "Sep 09, 2018",
+                content:"Coding articles frequently explore a wide range of subjects, including Python, JavaScript, SQL, AI, cloud computing, and developer tools. For example, articles may explain how to use GitHub Actions for CI/CD automation, build APIs with FastAPI, or implement algorithms like Merge Sort in Python."
+            },
+            {
+                title:"Practical Tutorials and Guides",
+                date:"Feb 24, 2023",
+                content: "Many articles focus on practical, hands-on tutorials. Examples include building neural networks with PyTorch, using Jupyter Notebooks for data science, or creating scalable cloud solutions with AWS. These guides often include step-by-step instructions, code snippets, and best practices to help developers apply the concepts effectively"
+            },
+            {
+                title:"Advanced Topics and Tools",
+                date:"Jul 12, 2021",
+                content:"Advanced topics such as fine-tuning large language models (LLMs), understanding Python's Global Interpreter Lock (GIL), or exploring cloud security certifications are also common. Articles may delve into tools like Visual Studio Code, GitLab, and Apache Kafka, offering insights into their features and workflows."
+            },
+            {
+                title:"Benefits of Coding Articles",
+                date:"Dec 14, 2019",
+                content:"These resources are invaluable for developers looking to stay updated with the latest trends, learn new technologies, or deepen their expertise in specific areas. By providing clear explanations and real-world examples, coding articles serve as a bridge between theoretical knowledge and practical application."
+            },
+            {
+                title:"Programming Is Mostly Thinking",
+                date:"Dec 16, 2017",
+                content:"Don't let the movies trick you. Programming is mostly thinking. Did you know that?This article is from 2014, but I discovered it this year, so it still counts. And it's just as relevant today as it was 10 years ago... maybe even more given all these awesome AI tools."
+            },
+            {
+                title:"What's that touchscreen in my room?",
+                date:"Jan 28, 2025",
+                content:"I highly recommend reading this to be inspired by what you can do with your technical knowledge. There are a lot of insights into problem solving skills in this one. Just a fun read overall."
+            }
+        ];
+        var searchInput = document.getElementById('searchBox');
+        var countElement = document.getElementById('resultCount');
+        var listElement = document.getElementById('articlesList');
+
+        function highlightMatches(text, searchWord){
+            if(!searchWord) return text;
+            var regex= new RegExp('('+ searchWord +')', 'gi');
+            return text.replace(regex, '<span class="matched-text">$1</span>');
+        }
+
+        function showResults(searchTerm) {
+            var results= [];
+
+            for (var i=0; i<articlesData.length; i++){
+                var article = articlesData[i];
+                if (!searchTerm || article.title.toLowerCase().indexOf(searchTerm.toLowerCase()) != -1 || article.content.toLowerCase().indexOf(searchTerm.toLowerCase()) != -1) {
+                    results.push(article);
+                }
+            }
+            countElement.innerHTML = results.length + ' posts were found.';
+            
+            listElement.innerHTML = '';
+            
+            for (var j = 0; j < results.length; j++) {
+                var article = results[j];
+                var articleDiv = document.createElement('div');
+                articleDiv.className = 'article-item';
+                
+                articleDiv.innerHTML = 
+                    '<div class="article-title">' + highlightMatches(article.title, searchTerm) + '</div>' +
+                    '<div class="article-date">' + article.date + '</div>' +
+                    '<div class="article-text">' + highlightMatches(article.content, searchTerm) + '</div>';
+                
+                listElement.appendChild(articleDiv);
+            }
+        }
+
+        searchInput.addEventListener('input', function() {
+            showResults(searchInput.value);
+        });
+        showResults('');
+    </script>
+</body>
+</html>
